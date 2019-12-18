@@ -2,7 +2,7 @@
 
 A simple docker container that runs QGIS 3 Server
 
-This image uses the [ubuntu:bionic docker official image](hhttps://hub.docker.com/_/ubuntu)  as its base.
+This image uses the [ubuntu:bionic docker official image](https://hub.docker.com/_/ubuntu)  as its base.
 
 **Note:**  not intended for use in a production environment
 
