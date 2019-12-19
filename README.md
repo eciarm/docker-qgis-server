@@ -1,12 +1,15 @@
-## QGIS Server for Docker
+## QGIS 3 Server for Docker
 
 A simple docker container that runs QGIS 3 Server
 
-This image uses the [ubuntu:bionic docker official image](https://hub.docker.com/_/ubuntu)  as its base.
+This image uses the [Ubuntu bionic Docker Official Image](https://hub.docker.com/_/ubuntu)  as its base. 
+QGIS packages from [Ubuntu qgis.org repository](https://qgis.org/ubuntu) are installed at build time.
+ 
 
-**Note:**  not intended for use in a production environment
+## Notes
+ * **Not** intended for use in a production environment
+ * The full version of QGIS is updated and determined at the build time.
 
-***
 
 ## Usage
 To  use this image:
@@ -22,7 +25,7 @@ To build the image from master branch:
 	
 To build from Dockerfile
 
-	./build.sh
+	docker build -t eciarm/qgis-server .
 	
 ## Run
 
@@ -30,21 +33,36 @@ Simple run a container
 
 	docker run --name "qgis-server" -p 8080:80 -d -t eciarm/qgis-server
 	
-Run a container mounting on host a volume that contains qgis projects 
+Run a container mounting on host a volume with many QGIS projects 
 
 	docker run --name "qgis-server" \
-	    -v /qgs_projects:/home \
+	    -v /path/of/projects/folder:/home \
 	    -p 8080:80 -d -t eciarm/qgis-server
 	    
 Run a container mounting on host a volume for output of apache logs 
 
 	docker run --name "qgis-server" \
-	    -v /host_qgs_projects:/home \
-	    -v /host_qgs_logs:/var/log/apache2 \
+	    -v /path/of/projects/folder:/home \
+	    -v /path/of/logs:/var/log/apache2 \
 	    -p 8080:80 -d -t eciarm/qgis-server
+
+## Orchestration with docker-compose
+
+ [https://docs.docker.com/compose/](https://docs.docker.com/compose/) 
+
 	    
-## Service 
+## Test working
 
-GetCapabilities example: qgis exposes test.qgz from local volume /qgs_projects :
+To test if QGIS Server works in a running container, you should have almost a project file in a host local folder mounted with a volume.
 
- [http://localhost:8080/test?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities](http://localhost:8080/test?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities) 
+Example with demo.qgz:
+
+[http://localhost:8080/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&map=/home/demo.qgz
+](http://localhost:8080/cgi-bin/qgis_mapserv.fcgi?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities&map=/home/demo.qgz
+) 
+
+The Apache is configured to public same map in another way, without cgi-bin and map path:
+
+[ http://localhost:8080/demo?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities]( http://localhost:8080/demo?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities) 
+ 
+
